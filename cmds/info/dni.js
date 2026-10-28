@@ -9,23 +9,22 @@ export default {
     try {
       const dni = args[0];
       if (!dni || !/^\d{8}$/.test(dni)) {
-        return msg.reply("❌ Debes ingresar un DNI válido de 8 dígitos.\n\n*Ejemplo:* `.dni 06256217`");
+        return msg.reply("❌ Debes ingresar un DNI válido de 8 dígitos.\n\n*Ejemplo:* `.dni 27427864`");
       }
 
-     
-      const token = "3PTHRsi2QxhKDHrcwu2izm1p0iLRIUrXk2uR5SknsmneA31K8W3LHmKThsba"; 
-      
-      // ✅ URL EXACTA DE LA DOCUMENTACIÓN
-      const apiUrl = `https://api-codart.cgrt.org/api/v1/consultas/reniec/dni/${dni}`; 
+      // ⚠️ PEGA AQUÍ TU TOKEN DE JSON.PE
+      const token = "d3b302afd932fd3833c16d2a5f4a31f891e76f9eb922001f97251962d093"; 
 
-      console.log(`🔍 [RENIEC] Consultando DNI: ${dni}`);
+      console.log(`🔍 [RENIEC] Consultando DNI: ${dni} en JSON.pe`);
 
-      const res = await fetch(apiUrl, {
-        method: "GET",
+      // ✅ Petición POST a la nueva API
+      const res = await fetch("https://api.json.pe/api/dni", {
+        method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ dni: dni }),
       });
 
       if (!res.ok) {
@@ -34,21 +33,21 @@ export default {
 
       const json = await res.json();
       
-      // ✅ La API devuelve los datos dentro de "result"
-      if (!json.success || !json.result) {
+      // ✅ Validamos que la respuesta sea exitosa y tenga los datos
+      if (!json.success || !json.data) {
         return msg.reply("❌ No se encontró información para ese DNI.");
       }
 
-      const data = json.result;
+      const data = json.data;
 
-      // ✅ Armar el mensaje con los campos que devuelve la API
+      // ✅ Armamos el mensaje SOLO con lo que devuelve esta API
       const mensaje = `🪪 *CONSULTA RENIEC*
 
-> 👤 *Nombre Completo:* ${data.full_name || 'No disponible'}
-> 🆔 *DNI:* ${data.document_number || dni}
-> 🎂 *Fecha de Nacimiento:* ${data.birth_date || 'No disponible'}
-> 🚻 *Género:* ${data.gender === 'F' ? 'Femenino' : data.gender === 'M' ? 'Masculino' : 'No disponible'}
-> 🌎 *Nacionalidad:* ${data.nationality || 'No disponible'}
+> 👤 *Nombres:* ${data.nombres || 'No disponible'}
+> 👤 *Apellido Paterno:* ${data.apellidoPaterno || 'No disponible'}
+> 👤 *Apellido Materno:* ${data.apellidoMaterno || 'No disponible'}
+> 👤 *Nombre Completo:* ${data.nombreCompleto || 'No disponible'}
+> 🆔 *DNI:* ${dni}
 
 > 🔒 _Consulta realizada de forma segura_`;
 
