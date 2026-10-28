@@ -9,11 +9,11 @@ export default {
     try {
       const dni = args[0];
       if (!dni || !/^\d{8}$/.test(dni)) {
-        return msg.reply("❌ Debes ingresar un DNI válido de 8 dígitos.\n\n*Ejemplo:* `.dni 46807126`");
+        return msg.reply("❌ Debes ingresar un DNI válido de 8 dígitos.\n\n*Ejemplo:* `.dni 06256217`");
       }
 
-      // ⚠️ PEGA AQUÍ TU NUEVO TOKEN REGENERADO
-      const token = "TU_NUEVO_TOKEN_AQUI"; 
+     
+      const token = "3PTHRsi2QxhKDHrcwu2izm1p0iLRIUrXk2uR5SknsmneA31K8W3LHmKThsba"; 
       
       // ✅ URL EXACTA DE LA DOCUMENTACIÓN
       const apiUrl = `https://api-codart.cgrt.org/api/v1/consultas/reniec/dni/${dni}`; 
