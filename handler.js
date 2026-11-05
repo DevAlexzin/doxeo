@@ -30,22 +30,22 @@ export default async (sock, msg) => {
     if (buttonId && buttonId.startsWith('ganadores_')) {
       const dia = buttonId.replace('ganadores_', '');
       const emojiDia = {
-        lunes: '🍯',
-        martes: '🍒',
-        miercoles: '🪩',
-        jueves: '👯‍♀️',
-        viernes: '🏹',
-        sabado: '🌈',
-        extras: '✨'
+        lunes: 'рҹҚҜ',
+        martes: 'рҹҚ’',
+        miercoles: 'рҹӘ©',
+        jueves: 'рҹ‘ҜвҖҚвҷҖпёҸ',
+        viernes: 'рҹҸ№',
+        sabado: 'рҹҢҲ',
+        extras: 'вңЁ'
       };
 
       const nombreDia = {
         lunes: 'Lunes',
         martes: 'Martes',
-        miercoles: 'Miércoles',
+        miercoles: 'MiГ©rcoles',
         jueves: 'Jueves',
         viernes: 'Viernes',
-        sabado: 'Sábado',
+        sabado: 'SГЎbado',
         extras: 'Extras'
       };
 
@@ -54,35 +54,35 @@ export default async (sock, msg) => {
 
       if (!temporal) {
         await sock.sendMessage(chatId, {
-          text: '❌ No se encontraron datos para anotar. Vuelve a usar el comando `.ganadores` con los datos.'
+          text: 'вқҢ No se encontraron datos para anotar. Vuelve a usar el comando `.ganadores` con los datos.'
         }, { quoted: msg });
         return;
       }
 
-      // Verificamos que no hayan pasado más de 5 minutos
+      // Verificamos que no hayan pasado mГЎs de 5 minutos
       const tiempoTranscurrido = Date.now() - temporal.timestamp;
       if (tiempoTranscurrido > 5 * 60 * 1000) {
         delete global.ganadoresTemporal[chatId];
         await sock.sendMessage(chatId, {
-          text: '⏳ Los datos han expirado. Vuelve a usar el comando `.ganadores` con los datos.'
+          text: 'вҸі Los datos han expirado. Vuelve a usar el comando `.ganadores` con los datos.'
         }, { quoted: msg });
         return;
       }
 
       // Guardamos en la base de datos
       const ahora = new Date();
-      const año = ahora.getFullYear();
-      const inicioAño = new Date(año, 0, 1);
-      const diasTranscurridos = Math.floor((ahora - inicioAño) / 86400000);
-      const semana = Math.ceil((diasTranscurridos + inicioAño.getDay() + 1) / 7);
+      const aГұo = ahora.getFullYear();
+      const inicioAГұo = new Date(aГұo, 0, 1);
+      const diasTranscurridos = Math.floor((ahora - inicioAГұo) / 86400000);
+      const semana = Math.ceil((diasTranscurridos + inicioAГұo.getDay() + 1) / 7);
 
       const chatDataGanadores = await db.getChat(chatId);
-      const dbKey = `ganadores_semana_${año}_${semana}`;
+      const dbKey = `ganadores_semana_${aГұo}_${semana}`;
       let ganadores = chatDataGanadores[dbKey] || {
         lunes: [], martes: [], miercoles: [], jueves: [], viernes: [], sabado: [], extras: []
       };
 
-      // ✅ VALIDACIÓN EXTRA: Verificar cuántas veces ha ganado esta semana
+      // вң… VALIDACIГ“N EXTRA: Verificar cuГЎntas veces ha ganado esta semana
       let vecesGanadas = 0;
       for (const key of ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'extras']) {
         const items = ganadores[key] || [];
@@ -92,12 +92,12 @@ export default async (sock, msg) => {
       if (vecesGanadas >= 2) {
         delete global.ganadoresTemporal[chatId];
         await sock.sendMessage(chatId, {
-          text: `⚠️ *Este número ya ganó 2 veces esta semana.*\n\n> 📱 Número: ${temporal.numero}\n> 👤 Nombre: ${temporal.nombre}\n\n*No puede ganar más de 2 veces por semana.*`
+          text: `вҡ пёҸ *Este nГәmero ya ganГі 2 veces esta semana.*\n\n> рҹ“ұ NГәmero: ${temporal.numero}\n> рҹ‘Ө Nombre: ${temporal.nombre}\n\n*No puede ganar mГЎs de 2 veces por semana.*`
         }, { quoted: msg });
         return;
       }
 
-      // Agregamos al día correspondiente
+      // Agregamos al dГӯa correspondiente
       ganadores[dia].push({
         numero: temporal.numero,
         premio: temporal.premio,
@@ -112,13 +112,13 @@ export default async (sock, msg) => {
 
       // Confirmamos el registro
       await sock.sendMessage(chatId, {
-        text: `✅ *Ganador anotado correctamente*
+        text: `вң… *Ganador anotado correctamente*
 
-> 📱 Número: ${temporal.numero}
-> 🎁 Premio: ${temporal.premio}
-> 👤 Nombre: ${temporal.nombre}
-> 📅 Día: ${emojiDia[dia]} ${nombreDia[dia]}
-> 📊 Veces ganadas esta semana: ${vecesGanadas + 1}/2`
+> рҹ“ұ NГәmero: ${temporal.numero}
+> рҹҺҒ Premio: ${temporal.premio}
+> рҹ‘Ө Nombre: ${temporal.nombre}
+> рҹ“… DГӯa: ${emojiDia[dia]} ${nombreDia[dia]}
+> рҹ“Ҡ Veces ganadas esta semana: ${vecesGanadas + 1}/2`
       }, { quoted: msg });
       
       return; // Detenemos el procesamiento
@@ -148,7 +148,7 @@ export default async (sock, msg) => {
   const isBotAdmins = msg.isGroup ? adminSet.has(botBase) : false;
   const isAdmins = msg.isGroup ? adminSet.has(senderBase) : false;
 
-  Promise.allSettled((global.cmdsExecute ?? []).filter(p => p.type === 'all').map(p => p.fn({ msg, sock, groupMetadata, participants, isAdmins, isBotAdmins, isOwner, __dirname: p.dirname }).catch(e => console.error(chalk.gray(`[ ✿ ] Error all-plugin ${p.key}: ${e.message}`)))));
+  Promise.allSettled((global.cmdsExecute ?? []).filter(p => p.type === 'all').map(p => p.fn({ msg, sock, groupMetadata, participants, isAdmins, isBotAdmins, isOwner, __dirname: p.dirname }).catch(e => console.error(chalk.gray(`[ вңҝ ] Error all-plugin ${p.key}: ${e.message}`)))));
 
   const tf = await db.getChatUser(msg.chat, msg.sender)
   const to = new Date().toLocaleDateString('es-CO', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' }).split('/').reverse().join('-') 
@@ -198,7 +198,7 @@ export default async (sock, msg) => {
     try {
       if (await p.fn({ msg, sock, match, groupMetadata, participants, isAdmins, isBotAdmins, isOwner, __dirname: p.dirname })) continue;
     } catch (e) {
-      console.error(chalk.gray(`[ ✿ ] Error before-plugin ${p.key}: ${e.message}`));
+      console.error(chalk.gray(`[ вңҝ ] Error before-plugin ${p.key}: ${e.message}`));
     }
   }
 
@@ -215,15 +215,15 @@ export default async (sock, msg) => {
 
   if (msg.message || !consolePrimary || consolePrimary === botJid) {
     console.log(`
-𝄢 · • —– ٠ ✤ ٠ —– • · · • —– ٠ ✤ ٠ —– • ·✧༄
-❚ ▸ ${chalk.cyan('𝐁𝐎𝐓 ❱❱')} ${chalk.bgMagenta(chalk.white.italic(sock.user.name))}
-❚ ▸ ${chalk.cyan('𝐇𝐎𝐑𝐀𝐑𝐈𝐎 ❱❱')} ${chalk.black.bgWhite(moment().format('DD/MM/YY HH:mm:ss'))}
-❚ ${chalk.magentaBright('°o.OO.o°°o.OO.o°°o.OO.o°')}
-❚ ▸ ${chalk.green('𝐔𝐒𝐔𝐀𝐑𝐈𝐎 ❱❱')} ${chalk.white(pushname)} / ${chalk.bgMagentaBright.bold(msg.isGroup ? 'Grupo' : 'Chat Private')}
-❚ ▸ ${chalk.green('𝐂𝐎𝐌𝐀𝐍𝐃𝐎 ❱❱')} ${chalk.magentaBright(command ? command : 'No Command')}
-❚ ${chalk.magentaBright('°o.OO.o°°o.OO.o°°o.OO.o°')}
-❚ ▸ ${chalk.redBright('𝐓𝐈𝐏𝐎 ❱❱')} ${chalk.greenBright.bold('[Bot Log]')}
-𝄢 · • —– ٠ ✤ ٠ —– • · · • —– ٠ ✤ ٠ —– • ·✧༄`.trim())
+рқ„ў В· вҖў вҖ”вҖ“ Щ  вңӨ Щ  вҖ”вҖ“ вҖў В· В· вҖў вҖ”вҖ“ Щ  вңӨ Щ  вҖ”вҖ“ вҖў В·вң§ај„
+вқҡ в–ё ${chalk.cyan('рқҗҒрқҗҺрқҗ“ вқұвқұ')} ${chalk.bgMagenta(chalk.white.italic(sock.user.name))}
+вқҡ в–ё ${chalk.cyan('рқҗҮрқҗҺрқҗ‘рқҗҖрқҗ‘рқҗҲрқҗҺ вқұвқұ')} ${chalk.black.bgWhite(moment().format('DD/MM/YY HH:mm:ss'))}
+вқҡ ${chalk.magentaBright('В°o.OO.oВ°В°o.OO.oВ°В°o.OO.oВ°')}
+вқҡ в–ё ${chalk.green('рқҗ”рқҗ’рқҗ”рқҗҖрқҗ‘рқҗҲрқҗҺ вқұвқұ')} ${chalk.white(pushname)} / ${chalk.bgMagentaBright.bold(msg.isGroup ? 'Grupo' : 'Chat Private')}
+вқҡ в–ё ${chalk.green('рқҗӮрқҗҺрқҗҢрқҗҖрқҗҚрқҗғрқҗҺ вқұвқұ')} ${chalk.magentaBright(command ? command : 'No Command')}
+вқҡ ${chalk.magentaBright('В°o.OO.oВ°В°o.OO.oВ°В°o.OO.oВ°')}
+вқҡ в–ё ${chalk.redBright('рқҗ“рқҗҲрқҗҸрқҗҺ вқұвқұ')} ${chalk.greenBright.bold('[Bot Log]')}
+рқ„ў В· вҖў вҖ”вҖ“ Щ  вңӨ Щ  вҖ”вҖ“ вҖў В· В· вҖў вҖ”вҖ“ Щ  вңӨ Щ  вҖ”вҖ“ вҖў В·вң§ај„`.trim())
   }
 
   const hasPrefix = (settings.prefijo === 1 || settings.prefijo === true) ? true : (Array.isArray(settings.prefijo) ? settings.prefijo : typeof settings.prefijo === 'string' ? [settings.prefijo] : []).some(p => msg.text?.startsWith(p));
@@ -310,14 +310,12 @@ export default async (sock, msg) => {
 
   if (!cmdData || user.muted === 1 || user.muted === true) {
     if (settings.prefijo === 1 || settings.prefijo === true || user.muted === 1 || user.muted === true) return
-    await sock.readMessages([msg.key])
-    return msg.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
   }
 
   const comando = msg.text.slice(usedPrefix.length)
 
   if (cmdData.isOwner && !global.owner.map(num => num + '@s.whatsapp.net').includes(sender)) {
-    return msg.reply(`ꕤ El comando *${command}* no existe.\n✎ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
+    return msg.reply(`к•Ө El comando *${command}* no existe.\nвңҺ Usa *${usedPrefix}help* para ver la lista de comandos disponibles.`)
   }
 
   if (cmdData.isAdmin && !isAdmins) return sock.reply(msg.chat, mess.admin, msg)
