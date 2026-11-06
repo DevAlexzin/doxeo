@@ -11,10 +11,10 @@ import readlineSync from "readline-sync";
 import { smsg, deleteCachedMeta } from "#serialize";
 import cmdsLoader from '#cmdsloader';
 import "#db";
-import { startSubBot } from '#subs';
 import db from '#db';
-import { iniciarCompeChecker } from './cmds/compeChecker.js';
-import { iniciarReglasChecker } from './cmds/reglasChecker.js';
+
+// ❌ ELIMINADO: import { startSubBot } from '#subs';
+// ❌ ELIMINADO: import { iniciarCompeChecker } from './cmds/compeChecker.js';
 
 const log = {
   info: (msg) => console.log(chalk.bgBlue.white.bold(` INFO `), chalk.white(msg)),
@@ -40,42 +40,14 @@ function normalizePhone(input) {
 
 console.log(chalk.blue.bold('\n INICIANDO SISTEMA ...'))
 console.log(chalk.cyan(`
-      Princess | Bot
+      Hr vip | Bot
      Powered by Alexander ~
 `))
 
-const BOT_TYPES = [
-  { name: 'SubBot', folder: './Sessions/Subs', starter: startSubBot }
-]
-
 if (!fs.existsSync('./lib/system/tmp')) fs.mkdirSync('./lib/system/tmp', { recursive: true });
 global.conns = global.conns || [];
-const reconnecting = new Set();
 const msgStore = new Map();
 const msgLimit = 500;
-
-async function loadBots() {
-  for (const { name, folder, starter } of BOT_TYPES) {
-    if (!fs.existsSync(folder)) continue;
-    const botIds = fs.readdirSync(folder);
-    for (const userId of botIds) {
-      const sessionPath = path.join(folder, userId);
-      const credsPath = path.join(sessionPath, 'creds.json');
-      if (!fs.existsSync(credsPath)) continue;
-      if (global.conns.some((conn) => conn.userId === userId)) continue;
-      if (reconnecting.has(userId)) continue;
-      try {
-        reconnecting.add(userId);
-        await starter(null, null, '', false, userId, '');
-      } catch (e) {
-        console.log(chalk.gray(`[ loadBots ] Error iniciando ${name} ${userId}: ${e?.message || e}`));
-        reconnecting.delete(userId);
-      }
-      await new Promise((res) => setTimeout(res, 2500));
-    }
-  }
-  setTimeout(loadBots, 60 * 1000);
-}
 
 async function initDB() {
   try {
@@ -235,22 +207,7 @@ export async function startBot() {
       log.success(`Conectado a: ${userName}`);
       if (!botReady) {
         botReady = true;
-        
-        // ✅ INICIAMOS EL CHECKER DE COMPETENCIAS
-        try {
-          iniciarCompeChecker(sock);
-          log.success('Sistema de competencias programadas iniciado.');
-        } catch (err) {
-          log.error(`Error iniciando compeChecker: ${err.message}`);
-        }
-
-        // ✅ INICIAMOS EL CHECKER DE REGLAS
-        try {
-          iniciarReglasChecker(sock);
-          log.success('Sistema de reglas programadas iniciado.');
-        } catch (err) {
-          log.error(`Error iniciando reglasChecker: ${err.message}`);
-        }
+        // ❌ ELIMINADO: El bloque que iniciaba el compeChecker
       }
     }
     if (isNewLogin) log.info("Nuevo dispositivo detectado");
@@ -299,6 +256,5 @@ export async function startBot() {
 (async () => {
   await initDB();
   await cmdsLoader();
-  loadBots();
   await startBot();
 })();
