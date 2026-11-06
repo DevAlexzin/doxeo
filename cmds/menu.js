@@ -20,7 +20,7 @@ export default {
                   : hora >= 12 && hora < 20 ? 'Buenas tardes 🌤️' 
                   : 'Buenas noches 🌙'
 
-      // ✅ DISEÑO PROPIO CON SOLO EL COMANDO DNI
+      // ✅ DISEÑO PROPIO CON EL NUEVO COMANDO
       const menu = `╔══════════════════╗
    ✦ ${botname.toUpperCase()} ✦
 ╚══════════════════╝
@@ -28,11 +28,14 @@ export default {
 > 👋 *${saludo}*, @${msg.sender.split('@')[0]}
 
 ┌───────────────────┐
-│ 📌 *COMANDO* │
+│ 📌 *COMANDOS* │
 └───────────────────┘
 
+> 🪪 **.dniv1**
+> ╰▸ Consulta información básica de un DNI.
+
 > 🪪 **.dni**
-> ╰▸ Consulta información de un DNI.
+> ╰▸ Consulta información completa de un DNI (con foto).
 
 ┌───────────────────┐
 │ 🔗 *ENLACES* │
@@ -48,6 +51,7 @@ export default {
         isForwarded: false,
       };
 
+      // Enviamos el menú como imagen si existe, o como texto con preview
       if (fs.existsSync(menuImagePath)) {
         return sock.sendMessage(msg.chat, {
           image: fs.readFileSync(menuImagePath),
